@@ -702,28 +702,6 @@ body {
   visibility: hidden;
 }
 
-/* Custom Tooltip */
-#custom-tooltip {
-  position: fixed;
-  z-index: 100;
-  background-color: var(--sidebar-color);
-  color: var(--text-primary);
-  border: 1px solid var(--md-border);
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
-  font-family: "JetBrains Mono", monospace;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.1s ease;
-}
-
-#custom-tooltip.visible {
-  opacity: 1;
-}
-
 /* Matrix Overlay */
 #matrix-overlay {
   position: fixed;
@@ -784,7 +762,6 @@ body[data-theme="invert"] .skills-list,
 body[data-theme="invert"] #bottom-panel,
 body[data-theme="invert"] #terminal-header,
 body[data-theme="invert"] #theme-picker,
-body[data-theme="invert"] #custom-tooltip,
 body[data-theme="invert"] .welcome-profile,
 body[data-theme="invert"] .welcome-quick-link-card {
   border-color: #000000 !important;
@@ -829,7 +806,6 @@ body[data-theme="light-plus"] .skills-list {
 }
 
 body[data-theme="light-plus"] #theme-picker,
-body[data-theme="light-plus"] #custom-tooltip,
 body[data-theme="light-plus"] .welcome-profile,
 body[data-theme="light-plus"] .welcome-quick-link-card {
   border: 1px solid var(--tab-border);
@@ -846,5 +822,761 @@ body[data-theme="light-plus"] .welcome-quick-link-card {
 @media (min-width: 768px) {
   .footer-watermark {
     display: inline;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Categorical palette for data viz (language shares).
+
+   Deliberately NOT the theme accents: those change per theme, so they can't be
+   validated once, and GitHub's own language colours fail colour-blind separation
+   (Python #3572A5 vs TypeScript #3178c6 are near-identical). These are a fixed,
+   validated set — assigned by rank, never cycled, capped at 6 + a neutral Other.
+
+   Validated with the dataviz validator against both surfaces:
+     dark  (#21252b): all pass, worst adjacent CVD dE 8.4, contrast >= 3:1
+     light (#ffffff): all pass, worst adjacent CVD dE 9.1; 3 slots under 3:1
+                      contrast, which is why every segment carries a visible
+                      text label in the legend rather than relying on colour.
+   --------------------------------------------------------------------------- */
+:root {
+  --viz-1: #3987e5;
+  --viz-2: #d95926;
+  --viz-3: #199e70;
+  --viz-4: #c98500;
+  --viz-5: #d55181;
+  --viz-6: #008300;
+  --viz-other: #6b7280;
+}
+
+body[data-theme="light-plus"],
+body[data-theme="invert"] {
+  --viz-1: #2a78d6;
+  --viz-2: #eb6834;
+  --viz-3: #1baf7a;
+  --viz-4: #eda100;
+  --viz-5: #e87ba4;
+  --viz-6: #008300;
+  --viz-other: #9ca3af;
+}
+
+/* ---------------------------------------------------------------------------
+   GitHub stats
+   --------------------------------------------------------------------------- */
+.gh-handle {
+  margin: -0.5rem 0 1.75rem;
+}
+
+.gh-handle a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--code-comment);
+  text-decoration: none;
+}
+
+.gh-handle a:hover {
+  color: var(--accent-blue);
+}
+
+.gh-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 2.25rem;
+}
+
+@media (min-width: 640px) {
+  .gh-tiles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.gh-tile {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--md-border);
+  border-radius: 8px;
+  background-color: var(--sidebar-color);
+}
+
+.gh-tile-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--code-comment);
+}
+
+.gh-tile-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0.3rem 0 0;
+  color: var(--text-primary);
+}
+
+.gh-section {
+  margin-bottom: 2.25rem;
+}
+
+.md-content .gh-section h2 {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  font-size: 1.15rem;
+}
+
+.gh-section-note {
+  font-size: 0.82rem;
+  color: var(--code-comment);
+  margin-bottom: 0.9rem;
+}
+
+/* Proportion bar: 2px surface gaps between segments, rounded outer ends. */
+.gh-lang-bar {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--md-border);
+}
+
+.gh-lang-seg {
+  height: 100%;
+  min-width: 2px;
+}
+
+.gh-lang-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+}
+
+.md-content .gh-lang-legend {
+  list-style: none;
+  padding-left: 0;
+}
+
+.gh-lang-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+.gh-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gh-lang-name {
+  color: var(--text-primary);
+}
+
+.gh-lang-pct {
+  font-size: 0.78rem;
+  color: var(--code-comment);
+}
+
+.gh-repo-list {
+  display: grid;
+  gap: 0.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.md-content .gh-repo-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.md-content .gh-repo-list li {
+  margin-bottom: 0;
+}
+
+/* The whole card is a link, so beat .md-content a's underline + hover recolour. */
+.md-content .gh-repo,
+.md-content .gh-repo:hover {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--md-border);
+  border-radius: 8px;
+  background-color: var(--sidebar-color);
+  text-decoration: none;
+  color: var(--text-color);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.md-content .gh-repo:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-1px);
+}
+
+.md-content .gh-repo:hover .gh-repo-name {
+  text-decoration: underline;
+}
+
+.gh-repo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.md-content .gh-repo-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.gh-repo-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--accent-yellow);
+  flex-shrink: 0;
+}
+
+/* GitHub descriptions are unbounded — some run many paragraphs. Clamp to two lines. */
+.gh-repo-desc {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.gh-repo-lang {
+  font-size: 0.75rem;
+  color: var(--code-comment);
+}
+
+.gh-fallback {
+  padding: 1.25rem;
+  border: 1px solid var(--md-border);
+  border-radius: 8px;
+  background-color: var(--sidebar-color);
+  font-size: 0.9rem;
+}
+
+.gh-fallback a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  color: var(--accent-blue);
+}
+
+/* ---------------------------------------------------------------------------
+   App shell height: dvh so mobile browser chrome doesn't clip the status bar.
+   --------------------------------------------------------------------------- */
+.app-height {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Visible keyboard focus. There was none before, which made the whole app
+   unusable without a mouse. */
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Page transition */
+.page-enter {
+  animation: page-enter 0.22s ease-out;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Command palette
+   --------------------------------------------------------------------------- */
+.palette-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  padding: 4rem 1rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.palette {
+  width: 100%;
+  max-width: 36rem;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sidebar-color);
+  border: 1px solid var(--md-border);
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: palette-in 0.12s ease-out;
+}
+
+@keyframes palette-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.palette-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--md-border);
+  color: var(--code-comment);
+}
+
+.palette-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.palette-input::placeholder {
+  color: var(--code-comment);
+  opacity: 1;
+}
+
+.palette-results {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem;
+  overflow-y: auto;
+}
+
+.palette-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.palette-item.active {
+  background-color: var(--close-hover-bg);
+  color: var(--text-primary);
+}
+
+.palette-item-label {
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-item-group {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--code-comment);
+  flex-shrink: 0;
+}
+
+.palette-empty {
+  padding: 1rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--code-comment);
+}
+
+/* ---------------------------------------------------------------------------
+   README hero. The avatar is CSS-rendered initials, not a placehold.co image —
+   one less external request, and it follows the theme.
+   --------------------------------------------------------------------------- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.hero-avatar {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--bg-color);
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+}
+
+.hero-text {
+  min-width: 0;
+}
+
+.md-content .hero-text h1 {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0.15rem;
+  font-size: 2rem;
+}
+
+.hero-title {
+  color: var(--accent-blue);
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--code-comment);
+}
+
+.md-content .hero-links a {
+  color: var(--code-comment);
+  text-decoration: none;
+}
+
+.md-content .hero-links a:hover {
+  color: var(--accent-blue);
+  text-decoration: underline;
+}
+
+/* Impact stats under the README body */
+.impact-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 2rem 0 0;
+}
+
+@media (min-width: 700px) {
+  .impact-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.impact-stat {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--md-border);
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 6px;
+  background-color: var(--sidebar-color);
+}
+
+.impact-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.impact-label {
+  font-size: 0.75rem;
+  color: var(--code-comment);
+  margin: 0.25rem 0 0;
+  line-height: 1.35;
+}
+
+/* Current-role marker on the experience list */
+.current-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 0.45rem;
+  vertical-align: middle;
+  border-radius: 50%;
+  background-color: var(--accent-green);
+}
+
+/* ---------------------------------------------------------------------------
+   Tech chips — shared by Experience and Projects
+   --------------------------------------------------------------------------- */
+/* .md-content ul sets list-style/padding, so match its specificity to win. */
+.tech-chips,
+.md-content .tech-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.md-content .tech-chip {
+  margin-bottom: 0;
+}
+
+.tech-chip {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background-color: var(--skill-tag-bg);
+  border: 1px solid var(--md-border);
+  color: var(--accent-blue);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Projects
+   --------------------------------------------------------------------------- */
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  border: 1px solid var(--md-border);
+  border-radius: 8px;
+  background-color: var(--sidebar-color);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.project-card:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+.project-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.project-card-header h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.project-card-link {
+  color: var(--code-comment);
+  flex-shrink: 0;
+}
+
+.project-card-link:hover {
+  color: var(--accent-blue);
+}
+
+.project-card-highlight {
+  font-size: 0.75rem;
+  color: var(--accent-green);
+  margin: 0.35rem 0 0;
+}
+
+.project-card-desc {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0.6rem 0 0;
+}
+
+.project-card .tech-chips {
+  margin-top: auto;
+  padding-top: 0.9rem;
+}
+
+/* Project actions: live demo reads as primary, source as secondary. */
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--md-border);
+}
+
+.md-content .project-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  border: 1px solid var(--md-border);
+  border-radius: 6px;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.md-content .project-action:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.md-content .project-action.primary {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.md-content .project-action.primary:hover {
+  background-color: var(--close-hover-bg);
+}
+
+/* The shared GitHubIcon is 24px; scale it down to sit inline with 0.78rem text. */
+.project-action-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---------------------------------------------------------------------------
+   Welcome palette hint
+   --------------------------------------------------------------------------- */
+.welcome-palette-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 2rem auto 0;
+  font-size: 0.8rem;
+  color: var(--code-comment);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.welcome-palette-hint:hover {
+  color: var(--text-primary);
+}
+
+.welcome-palette-hint kbd {
+  font-family: inherit;
+  font-size: 0.72rem;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--md-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background-color: var(--skill-tag-bg);
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile: stack the master-detail layouts instead of squeezing them into
+   a 33/66 split on a 375px screen.
+   --------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .experience-container,
+  .skills-container {
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .experience-list,
+  .skills-list {
+    flex-basis: auto;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    /* Without min-width:0 a flex item defaults to min-width:auto and this
+       nowrap strip stretches its parent past the viewport instead of scrolling. */
+    min-width: 0;
+    padding-right: 0;
+    padding-bottom: 0.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--md-border);
+  }
+
+  .experience-list-item,
+  .skills-list-item {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  /* !important beats the Tailwind w-full on those buttons */
+  .experience-list-item,
+  .skills-list-item {
+    width: auto !important;
+  }
+
+  .experience-detail-content,
+  .skills-detail-content {
+    flex-basis: auto;
+    min-width: 0;
+  }
+
+  .md-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .md-content ul {
+    padding-left: 1.25rem;
+  }
+}
+
+/* Theme-specific borders for the new surfaces */
+body[data-theme="invert"] .palette,
+body[data-theme="invert"] .project-card,
+body[data-theme="invert"] .tech-chip {
+  border-color: #000000 !important;
+}
+
+body[data-theme="light-plus"] .palette,
+body[data-theme="light-plus"] .project-card {
+  border: 1px solid var(--tab-border);
+}
+
+/* Respect users who ask for less motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .project-card:hover {
+    transform: none;
   }
 }

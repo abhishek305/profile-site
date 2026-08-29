@@ -1,8 +1,10 @@
 import { useAppDispatch } from "@/store/hooks";
 import { openTab } from "@/store/slices/tabsSlice";
 import { toggleTerminal } from "@/store/slices/terminalSlice";
+import { togglePalette } from "@/store/slices/paletteSlice";
 import { useTerminal } from "@/hooks/useTerminal";
-import { CodeIcon, CalendarIcon, ActivityIcon, TerminalIcon } from "../../icons";
+import { CodeIcon, CalendarIcon, PackageIcon, TerminalIcon } from "../../icons";
+import { profile } from "@/constants/profile";
 import type { PageId } from "@/types";
 
 const WelcomePage = () => {
@@ -28,10 +30,14 @@ const WelcomePage = () => {
       </div>
 
       <button className="welcome-profile" onClick={() => handleNavigate("about")}>
-        <img src="https://placehold.co/80x80/718096/E2E8F0?text=AE" alt="Abhishek Ezhava" className="welcome-profile-pic" />
+        <span className="welcome-profile-pic hero-avatar" aria-hidden="true">
+          AE
+        </span>
         <div>
-          <div className="welcome-profile-name">Abhishek Ezhava</div>
-          <p className="welcome-profile-title">Senior Software Engineer I</p>
+          <div className="welcome-profile-name">{profile.name}</div>
+          <p className="welcome-profile-title">
+            {profile.title} — {profile.focus}
+          </p>
         </div>
       </button>
 
@@ -40,7 +46,7 @@ const WelcomePage = () => {
           <CodeIcon />
           <div className="welcome-quick-link-title">Key Skills</div>
           <p className="welcome-quick-link-desc font-mono" style={{ color: "var(--accent-green)" }}>
-            React / Node.js / Kafka
+            React / TypeScript / MCP
           </p>
         </button>
 
@@ -50,10 +56,10 @@ const WelcomePage = () => {
           <p className="welcome-quick-link-desc">Senior Software Engineer I @ Contentstack</p>
         </button>
 
-        <button className="welcome-quick-link-card" onClick={() => handleNavigate("github")}>
-          <ActivityIcon />
-          <div className="welcome-quick-link-title">GitHub Stats</div>
-          <p className="welcome-quick-link-desc">View contributions & activity.</p>
+        <button className="welcome-quick-link-card" onClick={() => handleNavigate("projects")}>
+          <PackageIcon />
+          <div className="welcome-quick-link-title">Projects</div>
+          <p className="welcome-quick-link-desc">MCP tooling, agents, and developer utilities.</p>
         </button>
 
         <button className="welcome-quick-link-card" onClick={handleTerminalOpen}>
@@ -62,6 +68,12 @@ const WelcomePage = () => {
           <p className="welcome-quick-link-desc">Try commands like 'help' or 'contact'.</p>
         </button>
       </div>
+
+      <button className="welcome-palette-hint font-mono" onClick={() => dispatch(togglePalette(true))}>
+        Press <kbd>Ctrl</kbd>
+        <span>/</span>
+        <kbd>&#8984;</kbd> + <kbd>P</kbd> to jump anywhere
+      </button>
     </div>
   );
 };

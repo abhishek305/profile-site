@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { isPageId } from '@/data/pages';
 import type { PageId } from '@/types';
 
 interface TabsState {
@@ -7,10 +8,15 @@ interface TabsState {
   activePage: PageId;
 }
 
+// Seed from the URL rather than letting useHashRoute dispatch on mount: an
+// effect would read a stale activeTab and clobber the incoming hash.
+const hash = window.location.hash.slice(1);
+const landing: PageId = isPageId(hash) ? hash : 'home';
+
 const initialState: TabsState = {
-  openTabs: ['home'],
-  activeTab: 'home',
-  activePage: 'home',
+  openTabs: [landing],
+  activeTab: landing,
+  activePage: landing,
 };
 
 const tabsSlice = createSlice({
