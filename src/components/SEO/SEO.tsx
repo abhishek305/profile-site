@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { profile } from "@/constants/profile";
 
 interface SEOProps {
   title?: string;
@@ -8,7 +9,13 @@ interface SEOProps {
   ogImage?: string;
 }
 
-const SEO = ({ title = "Abhishek Ezhava - Portfolio", description = "Senior Software Engineer with 6 years of experience building scalable web applications, SDKs, and developer tools using React, TypeScript, and Node.js.", keywords = "Abhishek Ezhava, Senior Software Engineer, React, TypeScript, Node.js, Full Stack Developer, Software Engineer, Portfolio, IDE Theme", author = "Abhishek Ezhava", ogImage = "https://placehold.co/1200x630/718096/E2E8F0?text=Abhishek+Ezhava" }: SEOProps) => {
+const SEO = ({
+  title = `${profile.name} — ${profile.title}, ${profile.focus}`,
+  description = profile.summary,
+  keywords = "Abhishek Ezhava, Senior Software Engineer, Model Context Protocol, MCP, MCP server, agent tooling, React, Next.js, TypeScript, Node.js, NestJS, Developer Experience, Contentstack, Portfolio",
+  author = profile.name,
+  ogImage = "https://placehold.co/1200x630/1a1a2e/61afef?text=Abhishek+Ezhava",
+}: SEOProps) => {
   return (
     <Helmet>
       {/* Primary Meta Tags */}

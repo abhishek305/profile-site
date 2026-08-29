@@ -3,6 +3,7 @@ import themeReducer from './slices/themeSlice';
 import tabsReducer from './slices/tabsSlice';
 import terminalReducer from './slices/terminalSlice';
 import matrixReducer from './slices/matrixSlice';
+import paletteReducer from './slices/paletteSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     tabs: tabsReducer,
     terminal: terminalReducer,
     matrix: matrixReducer,
+    palette: paletteReducer,
   },
 });
 

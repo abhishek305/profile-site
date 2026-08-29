@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { pageContent } from "@/data/pageContent";
-import type { SkillCategory } from "@/types";
+import { skillsData } from "@/data/content";
 
 const SkillsPage = () => {
-  const skillsData = pageContent.skills.data as SkillCategory[];
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 

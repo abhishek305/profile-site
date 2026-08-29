@@ -1,77 +1,124 @@
-import { useState, useEffect } from "react";
-import { useAppSelector } from "@/store/hooks";
-import { githubThemeMap } from "@/constants/themes";
-import type { ThemeId } from "@/types";
+import { useGitHubStats, type GitHubStats } from "@/hooks/useGitHubStats";
+import { profile, links } from "@/constants/profile";
+import { StarIcon, ExternalLinkIcon } from "../../icons";
 
-const GitHubPage = () => {
-  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
+const nf = new Intl.NumberFormat("en-US");
+const pct = (share: number) => `${Math.round(share * 100)}%`;
 
-  const getGitHubUrls = (theme: ThemeId) => {
-    const ghStatsTheme = githubThemeMap.stats[theme] || "default";
-    const ghActivityTheme = githubThemeMap.activity[theme] || "default";
-    const ghViewsColor = githubThemeMap.views[theme] || "blueviolet";
+/** Categorical slot per language, fixed by rank and never cycled (see index.css --viz-*). */
+const slotOf = (index: number, name: string) => (name === "Other" ? "var(--viz-other)" : `var(--viz-${Math.min(index + 1, 6)})`);
 
-    return {
-      streak: `https://github-readme-streak-stats.herokuapp.com/?user=abhishek305&theme=${ghStatsTheme}&hide_border=true`,
-      langs: `https://github-readme-stats.vercel.app/api/top-langs/?username=abhishek305&layout=compact&theme=${ghStatsTheme}&hide_border=true&langs_count=8`,
-      activity: `https://github-readme-activity-graph.vercel.app/graph?username=abhishek305&theme=${ghActivityTheme}&hide_border=true&area=true`,
-      views: `https://komarev.com/ghpvc/?username=OkayDexter&color=${ghViewsColor}&style=for-the-badge`,
-    };
-  };
+const StatTiles = ({ data }: { data: GitHubStats }) => (
+  <dl className="gh-tiles">
+    {[
+      { label: "Repositories", value: data.repos },
+      { label: "Stars earned", value: data.stars },
+      { label: "Followers", value: data.followers },
+      { label: "Following", value: data.following },
+    ].map((tile) => (
+      <div key={tile.label} className="gh-tile">
+        <dt className="gh-tile-label">{tile.label}</dt>
+        <dd className="gh-tile-value font-mono">{nf.format(tile.value)}</dd>
+      </div>
+    ))}
+  </dl>
+);
 
-  const [urls, setUrls] = useState(getGitHubUrls(currentTheme));
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({
-    streak: false,
-    langs: false,
-    activity: false,
-    views: false,
-  });
-
-  useEffect(() => {
-    // Update URLs when theme changes
-    setUrls(getGitHubUrls(currentTheme));
-    // Reset loaded states
-    setLoadedImages({
-      streak: false,
-      langs: false,
-      activity: false,
-      views: false,
-    });
-  }, [currentTheme]);
-
-  const handleImageLoad = (key: string) => {
-    setLoadedImages((prev) => ({ ...prev, [key]: true }));
-  };
-
-  const handleImageError = (key: string) => {
-    setLoadedImages((prev) => ({ ...prev, [key]: true })); // Remove skeleton on error
-  };
+const Languages = ({ data }: { data: GitHubStats }) => {
+  if (data.languages.length === 0) return null;
 
   return (
-    <div className="md-content max-w-3xl mx-auto">
-      <h1>GitHub Statistics</h1>
-      <br />
-      <div className="github-grid">
-        {/* GitHub Streak */}
-        <div className={`github-card ${!loadedImages.streak ? "skeleton" : ""}`}>
-          <img src={urls.streak} alt="GitHub Streak" className={loadedImages.streak ? "loaded" : ""} onLoad={() => handleImageLoad("streak")} onError={() => handleImageError("streak")} />
-        </div>
+    <section className="gh-section">
+      <h2>Languages</h2>
+      <p className="gh-section-note">Share of {nf.format(data.languages.reduce((n, l) => n + l.count, 0))} source repositories.</p>
 
-        {/* Top Languages */}
-        <div className={`github-card ${!loadedImages.langs ? "skeleton" : ""}`}>
-          <img src={urls.langs} alt="Abhishek's Top Languages" className={loadedImages.langs ? "loaded" : ""} onLoad={() => handleImageLoad("langs")} onError={() => handleImageError("langs")} />
-        </div>
-
-        {/* GitHub Activity Graph */}
-        <div className={`github-card github-card-full ${!loadedImages.activity ? "skeleton" : ""}`}>
-          <img src={urls.activity} alt="GitHub Activity Graph" className={loadedImages.activity ? "loaded" : ""} onLoad={() => handleImageLoad("activity")} onError={() => handleImageError("activity")} />
-        </div>
-
-        {/* Profile Views */}
-        <div className={`github-card github-card-full profile-views-card ${!loadedImages.views ? "skeleton" : ""}`}>
-          <img src={urls.views} alt="Profile Views" className={loadedImages.views ? "loaded" : ""} onLoad={() => handleImageLoad("views")} onError={() => handleImageError("views")} />
-        </div>
+      {/* Proportion bar. Identity is carried by the labelled chips below, never by colour alone. */}
+      <div className="gh-lang-bar" role="img" aria-label={data.languages.map((l) => `${l.name} ${pct(l.share)}`).join(", ")}>
+        {data.languages.map((lang, i) => (
+          <span key={lang.name} className="gh-lang-seg" style={{ width: `${lang.share * 100}%`, backgroundColor: slotOf(i, lang.name) }} />
+        ))}
       </div>
+
+      <ul className="gh-lang-legend">
+        {data.languages.map((lang, i) => (
+          <li key={lang.name} className="gh-lang-chip">
+            <span className="gh-dot" style={{ backgroundColor: slotOf(i, lang.name) }} aria-hidden="true" />
+            <span className="gh-lang-name">{lang.name}</span>
+            <span className="gh-lang-pct font-mono">{pct(lang.share)}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
+const TopRepos = ({ data }: { data: GitHubStats }) => {
+  if (data.topRepos.length === 0) return null;
+
+  return (
+    <section className="gh-section">
+      <h2>Most starred</h2>
+      <ul className="gh-repo-list">
+        {data.topRepos.map((repo) => (
+          <li key={repo.name}>
+            <a className="gh-repo" href={repo.url} target="_blank" rel="noopener noreferrer">
+              <span className="gh-repo-head">
+                <span className="gh-repo-name font-mono">{repo.name}</span>
+                <span className="gh-repo-stars font-mono">
+                  <StarIcon />
+                  {nf.format(repo.stars)}
+                </span>
+              </span>
+              {repo.description && <span className="gh-repo-desc">{repo.description}</span>}
+              {repo.language && <span className="gh-repo-lang">{repo.language}</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
+const GitHubPage = () => {
+  const state = useGitHubStats();
+
+  return (
+    <div className="md-content max-w-4xl mx-auto">
+      <h1>GitHub Statistics</h1>
+      <p className="gh-handle">
+        <a href={links.github} target="_blank" rel="noopener noreferrer" className="font-mono">
+          @{profile.githubUser}
+          <ExternalLinkIcon />
+        </a>
+      </p>
+
+      {state.status === "loading" && (
+        <div className="gh-tiles" aria-busy="true" aria-label="Loading GitHub statistics">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="gh-tile skeleton" style={{ height: "5.5rem" }} />
+          ))}
+        </div>
+      )}
+
+      {state.status === "error" && (
+        <div className="gh-fallback">
+          <p>
+            Couldn&apos;t reach the GitHub API ({state.message}). It rate-limits to 60 requests an hour per IP, so this usually clears on its own.
+          </p>
+          <a href={links.github} target="_blank" rel="noopener noreferrer">
+            View the profile on GitHub
+            <ExternalLinkIcon />
+          </a>
+        </div>
+      )}
+
+      {state.status === "ready" && (
+        <>
+          <StatTiles data={state.data} />
+          <Languages data={state.data} />
+          <TopRepos data={state.data} />
+        </>
+      )}
     </div>
   );
 };

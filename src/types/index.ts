@@ -6,27 +6,35 @@ export interface Theme {
   name: string;
 }
 
-// Page types
-export type PageId = 'home' | 'about' | 'skills' | 'experience' | 'github' | 'welcome';
+// PageId is derived from the page registry so adding a page needs no edit here.
+export type { PageId } from '@/data/pages';
 
-export interface PageContent {
-  title: string;
-  type: 'markdown' | 'custom' | 'custom_skills';
-  content?: string;
-  data?: ExperienceData[] | SkillCategory[];
-}
-
+// Content types
 export interface ExperienceData {
   role: string;
   company: string;
   date: string;
   highlights: string[];
+  tech?: string[];
+  /** Renders as a "Current" marker on the timeline. */
+  current?: boolean;
 }
 
 export interface SkillCategory {
   category: string;
   id: string;
   skills: string[];
+}
+
+export interface Project {
+  name: string;
+  description: string;
+  tech: string[];
+  /** Source repository. */
+  link?: string;
+  /** Live, hosted version — rendered as a separate primary action. */
+  demo?: string;
+  highlight?: string;
 }
 
 // Terminal types
@@ -36,20 +44,9 @@ export interface TerminalLine {
   type: 'command' | 'output' | 'comment';
 }
 
-// Firebase types
-export interface FirebaseConfig {
-  apiKey: string;
-  authDomain: string;
-  projectId: string;
-  storageBucket?: string;
-  messagingSenderId?: string;
-  appId?: string;
-}
-
 // GitHub theme mapping
 export interface GitHubThemeMap {
   stats: Record<ThemeId, string>;
   activity: Record<ThemeId, string>;
   views: Record<ThemeId, string>;
 }
-
