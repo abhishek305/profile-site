@@ -33,8 +33,8 @@ export const experienceData: ExperienceData[] = [
   {
     role: "Senior Software Engineer I",
     company: "Contentstack — Hybrid",
-    date: "Feb 2024 - Present",
-    current: true,
+    date: "Feb 2024 - Aug 2026",
+    current: false,
     tech: ["React", "TypeScript", "NestJS", "MCP", "OAuth 2.0", "Kafka", "Playwright"],
     highlights: [
       "Built and shipped MCP Profile Hub, Contentstack's MCP server for AI clients like Claude and Cursor. Replaced hand-written Management API scripts with scoped, reusable tool profiles spanning 10 hosted catalogs, 180+ tools and 28 prebuilt system profiles, then opened it further so a customer's own Automate automations and Agent OS agents become callable tools — turning agent runs into deterministic, audited workflows. Profiles export and import as JSON and load straight from the MCP URL, secured with OAuth 2.0 PKCE, encrypted-at-rest tokens, rate limiting and server-side plan entitlements, backed by 66 test suites.",

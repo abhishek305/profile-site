@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { stopMatrix } from "@/store/slices/matrixSlice";
 
@@ -7,6 +7,7 @@ const Matrix = () => {
   const isActive = useAppSelector((state) => state.matrix.isActive);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const intervalRef = useRef<number>();
+  const handleStop = useCallback(() => dispatch(stopMatrix()), [dispatch]);
 
   useEffect(() => {
     if (!isActive) return;
@@ -80,11 +81,7 @@ const Matrix = () => {
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isActive]);
-
-  const handleStop = () => {
-    dispatch(stopMatrix());
-  };
+  }, [isActive, handleStop]);
 
   if (!isActive) return null;
 

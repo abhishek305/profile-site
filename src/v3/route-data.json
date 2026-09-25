@@ -1,0 +1,12 @@
+[
+  { "path": "/", "label": "Home", "title": "Abhishek Ezhava – Senior Software Engineer, GenAI/MCP and platform engineering", "description": "Senior software engineer with 6.5 years at Contentstack. Built MCP Profile Hub, a production MCP server with 180+ tools used by Claude, Cursor and Codex. Try four projects right here in the page.", "kind": "home" },
+  { "path": "/work", "label": "Work", "title": "Work – Abhishek Ezhava", "description": "Playable case studies for MCP Profile Hub, architect-agent, Crowdly and LaTeX Live Editor.", "kind": "work" },
+  { "path": "/work/mcp-profile-hub", "label": "MCP Profile Hub", "title": "MCP Profile Hub – Abhishek Ezhava", "description": "A production MCP server for Claude, Cursor and Codex.", "kind": "project", "projectSlug": "mcp-profile-hub" },
+  { "path": "/work/architect-agent", "label": "architect-agent", "title": "architect-agent – Abhishek Ezhava", "description": "Spec-to-backlog documentation tooling built on Mastra.ai.", "kind": "project", "projectSlug": "architect-agent" },
+  { "path": "/work/crowdly", "label": "Crowdly", "title": "Crowdly – Abhishek Ezhava", "description": "A live event discovery and booking platform with CDP segmentation.", "kind": "project", "projectSlug": "crowdly" },
+  { "path": "/work/latex-live-editor", "label": "LaTeX Live Editor", "title": "LaTeX Live Editor – Abhishek Ezhava", "description": "A browser-based LaTeX editor with client-side compilation.", "kind": "project", "projectSlug": "latex-live-editor" },
+  { "path": "/experience", "label": "Experience", "title": "Experience – Abhishek Ezhava", "description": "Experience building developer platforms at Contentstack from January 2020 to August 2026.", "kind": "experience" },
+  { "path": "/code", "label": "Code", "title": "Code on GitHub – Abhishek Ezhava", "description": "Selected open-source projects by Abhishek Ezhava.", "kind": "code" },
+  { "path": "/about", "label": "About", "title": "About – Abhishek Ezhava", "description": "About Abhishek Ezhava's frontend, backend and AI platform work.", "kind": "about" },
+  { "path": "/contact", "label": "Contact", "title": "Contact – Abhishek Ezhava", "description": "Get in touch about MCP, agent tooling and developer platforms.", "kind": "contact" }
+]

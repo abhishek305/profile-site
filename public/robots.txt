@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://your-domain.com/sitemap.xml
-
+Sitemap: https://profile-site-navy-pi.vercel.app/sitemap.xml

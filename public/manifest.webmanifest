@@ -1,22 +1,14 @@
 {
-    "name": "Abhishek Ezhava - Portfolio",
-    "short_name": "Portfolio IDE",
-    "description": "Senior Software Engineer Portfolio - IDE themed interactive resume",
-    "theme_color": "#282c34",
-    "background_color": "#282c34",
-    "display": "standalone",
-    "scope": "/",
-    "start_url": "/",
-    "icons": [
-        {
-            "src": "/pwa-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/pwa-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+  "name": "Abhishek Ezhava — Play the work",
+  "short_name": "Abhishek Ezhava",
+  "description": "A portfolio of playable work by Abhishek Ezhava.",
+  "theme_color": "#F1F4F9",
+  "background_color": "#F1F4F9",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    { "src": "/pwa-192x192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/pwa-512x512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
 }
