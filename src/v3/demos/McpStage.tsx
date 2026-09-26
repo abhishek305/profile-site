@@ -45,7 +45,18 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, config: action.config };
 
     case "start":
-      return { ...state, hasRun: true, steps: [], log: [], message: "Working...", next: "" };
+      // runId must be recorded here, not only in the ref: every later action is
+      // guarded by comparing against state.runId, and without this the first
+      // run compares 1 against the initial 0 and is discarded.
+      return {
+        ...state,
+        runId: action.runId,
+        hasRun: true,
+        steps: [],
+        log: [],
+        message: "Working...",
+        next: "",
+      };
 
     case "reveal": {
       if (state.runId !== action.runId) return state;
