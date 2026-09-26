@@ -35,6 +35,7 @@ export const projects: Project[] = [
     ],
     tryThis: "Set Arguments to “Title missing”, then switch Error messages between Terse and Helpful. Same failure, very different next move for the model.",
     disclaimer: "Illustrative simulation with a fictional tool and fictional profiles. Not production data.",
+    highlight: "Break a tool call and see what the AI model gets back.",
   },
   {
     slug: "architect-agent",
@@ -56,6 +57,7 @@ export const projects: Project[] = [
     ],
     tryThis: "Delete the word “must” from the first sentence. The ticket drops a priority level. Then open the CSV view and watch the Priority column follow.",
     disclaimer: "Rule-based stand-in for illustration. The real toolkit uses LLM agents.",
+    highlight: "Edit a product spec and watch the backlog rewrite itself.",
   },
   {
     slug: "crowdly",
@@ -78,6 +80,7 @@ export const projects: Project[] = [
     ],
     tryThis: "Untick everything except Music, then narrow “active” to 7 days. Save it. Loosen one rule and compare the two counts.",
     disclaimer: "Fictional sample audience, generated in your browser. Crowdly's real segments come from Lytics.",
+    highlight: "Set rules for an audience segment and see who is in it.",
   },
   {
     slug: "latex-live-editor",
@@ -99,6 +102,7 @@ export const projects: Project[] = [
     ],
     tryThis: "Delete one closing brace from \\textbf{Bold}. The status line tells you what to check.",
     disclaimer: "Stand-in renderer for the design prototype. Supports sections, bold, emphasis, lists and basic maths.",
+    highlight: "Type LaTeX on the left, read the page on the right.",
   },
 ];
 

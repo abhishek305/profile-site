@@ -1,13 +1,5 @@
 import { projects } from "../../content";
 
-/** What each chapter asks the visitor to try, keyed by project slug. */
-const chapterHighlights: Record<string, string> = {
-  "mcp-profile-hub": "Break a tool call and see what the AI model gets back.",
-  "architect-agent": "Edit a product spec and watch the backlog rewrite itself.",
-  crowdly: "Set rules for an audience segment and see who is in it.",
-  "latex-live-editor": "Type LaTeX on the left, read the page on the right.",
-};
-
 export const Hero = () => (
   <section className="hero" id="intro" aria-labelledby="intro-heading" tabIndex={-1}>
     <h1 id="intro-heading">I build the platforms that AI clients plug into.</h1>
@@ -34,7 +26,7 @@ export const Hero = () => (
         <li key={project.slug}>
           <a href={`#${project.anchor}`}>
             <b>{project.title}</b>
-            <span>{chapterHighlights[project.slug]}</span>
+            <span>{project.highlight}</span>
           </a>
         </li>
       ))}

@@ -22,6 +22,8 @@ export interface Project {
   facts: string[];
   tryThis: string;
   disclaimer: string;
+  /** One-line hook used in the hero's list of playable chapters. */
+  highlight: string;
 }
 
 export interface ResultClaim {

@@ -1132,6 +1132,24 @@ body[data-site="v3"] .repos .lk {
   font: 600 0.95rem var(--font-head);
 }
 
+/*
+ * A row of outbound links. The middot between them is a generated `::before`
+ * on every item but the first, so the separator is a visual detail and is not
+ * announced between the link labels. The inline " · " text node this replaced
+ * was read out as part of the surrounding sentence.
+ */
+body[data-site="v3"] .linklist {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0 0.5em;
+  align-items: baseline;
+}
+
+body[data-site="v3"] .linklist > * + *::before {
+  content: " · ";
+  color: var(--muted);
+}
+
 body[data-site="v3"] .contact-links {
   margin-top: 20px;
 }
@@ -1362,6 +1380,105 @@ body[data-site="v3"] [hidden] {
   padding-top: 24px;
   border-top: 2px solid #101a30;
   font-family: Arial, sans-serif;
+}
+
+/*
+ * Before React mounts there is no `data-site="v3"` on <body>, so the rules above
+ * do not apply yet. These unscoped equivalents keep the prerendered page
+ * legible in that window, and are what a visitor without JavaScript sees.
+ */
+.v3-static-shell .prose p {
+  margin: 0 0 1em;
+  max-width: 68ch;
+}
+
+.v3-static-shell .tagline {
+  margin: 0 0 1.4em;
+  color: #465272;
+  font-style: italic;
+}
+
+.v3-static-shell .static-fallback {
+  max-width: 62ch;
+  margin: 20px 0;
+  padding: 16px;
+  border: 1.5px solid #101a30;
+  background: #e4eaf4;
+  font-family: Arial, sans-serif;
+  font-size: 0.95rem;
+}
+
+.v3-static-shell .facts,
+.v3-static-shell .note {
+  max-width: 68ch;
+  margin: 1.2em 0 0;
+  padding-left: 12px;
+  border-left: 3px solid #c3ccdd;
+  color: #465272;
+  font-size: 0.95rem;
+}
+
+.v3-static-shell .linklist {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0 0.5em;
+}
+
+.v3-static-shell .linklist > * + *::before {
+  content: " · ";
+}
+
+.v3-static-shell .index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v3-static-shell .index li {
+  margin: 0 0 10px;
+}
+
+.v3-static-shell .index a {
+  display: inline-block;
+  padding: 10px 14px;
+  border: 1.5px solid #101a30;
+  text-decoration: none;
+}
+
+.v3-static-shell .index span {
+  display: block;
+  color: #465272;
+  font-size: 0.95rem;
+}
+
+.v3-static-shell .roles,
+.v3-static-shell .repos {
+  padding-left: 20px;
+}
+
+.v3-static-shell .defs {
+  display: grid;
+  grid-template-columns: minmax(140px, 200px) 1fr;
+  gap: 8px 20px;
+  margin: 0;
+}
+
+.v3-static-shell .defs dt {
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+}
+
+.v3-static-shell .defs dd {
+  margin: 0;
+}
+
+.v3-static-shell .vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 /*

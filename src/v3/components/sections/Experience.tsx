@@ -1,5 +1,5 @@
 import { Section } from "../common/Section";
-import { EMPLOYMENT, experience } from "../../content";
+import { EMPLOYMENT, experience, experienceIntro } from "../../content";
 
 /** Roles at Contentstack, most recent first. */
 export const Experience = ({ standalone = false }: { standalone?: boolean }) => (
@@ -10,8 +10,7 @@ export const Experience = ({ standalone = false }: { standalone?: boolean }) => 
   >
     <div className="prose">
       <p>
-        {EMPLOYMENT.company}, {EMPLOYMENT.from} to {EMPLOYMENT.to}. I started as an application engineer and
-        grew into owning developer platform products end to end.
+        {EMPLOYMENT.company}, {EMPLOYMENT.from} to {EMPLOYMENT.to}. {experienceIntro}
       </p>
     </div>
 

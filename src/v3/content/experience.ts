@@ -7,6 +7,9 @@ export const EMPLOYMENT = {
   to: "August 2026",
 } as const;
 
+/** Standfirst above the role list. */
+export const experienceIntro = `I started as an application engineer and grew into owning developer platform products end to end.`;
+
 export const experience: ExperienceRole[] = [
   {
     title: "Senior Software Engineer I",

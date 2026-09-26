@@ -5,7 +5,7 @@
  * HTML and the React bundle can never drift apart.
  */
 export { projects, projectBySlug } from "./projects";
-export { EMPLOYMENT, experience, resultClaims } from "./experience";
+export { EMPLOYMENT, experience, experienceIntro, resultClaims } from "./experience";
 export {
   aboutDefinitions,
   aboutParagraphs,

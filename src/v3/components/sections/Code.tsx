@@ -40,7 +40,7 @@ export const Code = ({ standalone = false }: { standalone?: boolean }) => (
 
     <p className="note">
       Older work: <ExternalLink href={MOST_STARRED.href}>{MOST_STARRED.name}</ExternalLink>,{" "}
-      {MOST_STARRED.description.toLowerCase()} It is my most-starred repository at {MOST_STARRED.stars} stars.
+      {MOST_STARRED.description} It is my most-starred repository at {MOST_STARRED.stars} stars.
     </p>
 
     <div className="contact-links">
