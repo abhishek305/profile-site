@@ -1363,3 +1363,55 @@ body[data-site="v3"] [hidden] {
   border-top: 2px solid #101a30;
   font-family: Arial, sans-serif;
 }
+
+/*
+ * Windows High Contrast and forced-colors modes override background and text
+ * colours, which strips the MCP flow's per-state colour coding. The borders
+ * below are the same distinction expressed as line style, so a step's state
+ * survives when colour does not.
+ */
+@media (forced-colors: active) {
+  body[data-site="v3"] .flow li {
+    border: 2px solid CanvasText;
+    forced-color-adjust: none;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  body[data-site="v3"] .flow li[data-state="active"] {
+    border-style: solid;
+    border-width: 3px;
+  }
+
+  body[data-site="v3"] .flow li[data-state="done"] {
+    border-style: solid;
+  }
+
+  body[data-site="v3"] .flow li[data-state="fail"],
+  body[data-site="v3"] .flow li[data-state="queued"],
+  body[data-site="v3"] .flow li[data-state="skipped"] {
+    border-style: dashed;
+  }
+
+  body[data-site="v3"] .flow li em {
+    color: CanvasText;
+  }
+
+  body[data-site="v3"] :focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/*
+ * Sections are focus targets for in-page `#anchor` links. They should not draw
+ * a focus ring for that, but they must still show one for keyboard users who
+ * tab to them directly.
+ */
+body[data-site="v3"] section:focus {
+  outline: none;
+}
+
+body[data-site="v3"] section:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
