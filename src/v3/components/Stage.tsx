@@ -1,21 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
-
-export type FlowState = "idle" | "active" | "done" | "fail" | "queued" | "skipped";
-
-export interface FlowStep {
-  index: number;
-  state: Exclude<FlowState, "idle">;
-  message: string;
-}
+import type { ReactNode } from "react";
+import { useInView } from "../hooks/useInView";
 
 interface StageProps {
   hint: string;
@@ -26,84 +10,21 @@ interface StageProps {
   fallback?: string;
 }
 
-const ToastContext = createContext<(message: string) => void>(() => undefined);
-
-export const ToastProvider = ({ children }: { children: ReactNode }) => {
-  const [message, setMessage] = useState("");
-  const [visible, setVisible] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
-
-  const showToast = useCallback((nextMessage: string) => {
-    setMessage(nextMessage);
-    setVisible(true);
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => setVisible(false), 1800);
-  }, []);
-
-  useEffect(() => () => {
-    if (timer.current) clearTimeout(timer.current);
-  }, []);
-
-  return (
-    <ToastContext.Provider value={showToast}>
-      {children}
-      <div id="toast" role="status" aria-live="polite" className={visible ? "show" : ""}>
-        {message}
-      </div>
-    </ToastContext.Provider>
-  );
-};
-
-export const useToast = () => useContext(ToastContext);
-
 export const Hint = ({ children }: { children: ReactNode }) => <span className="hint">{children}</span>;
 
-export const Stage = ({ hint, children, disclaimer, className = "", barContent, fallback = "This demo needs JavaScript. Its text and controls are shown here as a static fallback." }: StageProps) => {
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [seen, setSeen] = useState(false);
-
-  useEffect(() => {
-    const element = stageRef.current;
-    if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setSeen(true);
-      return;
-    }
-    if (!("IntersectionObserver" in window)) {
-      setSeen(true);
-      return;
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          setSeen(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.6 },
-    );
-    const hintTarget = element.querySelector(".stage-bar") ?? element;
-    observer.observe(hintTarget);
-
-    // The scroll listener is a small fallback for embedded/headless browsers
-    // where IntersectionObserver updates can be throttled.
-    const revealWhenVisible = () => {
-      const rect = hintTarget.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
-        setSeen(true);
-        observer.disconnect();
-        window.removeEventListener("scroll", revealWhenVisible);
-      }
-    };
-    revealWhenVisible();
-    window.addEventListener("scroll", revealWhenVisible, { passive: true });
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("scroll", revealWhenVisible);
-    };
-  }, []);
+export const Stage = ({
+  hint,
+  children,
+  disclaimer,
+  className = "",
+  barContent,
+  fallback = "This demo needs JavaScript. Its text and controls are shown here as a static fallback.",
+}: StageProps) => {
+  // The hint bar is what animates in, so that is the element worth watching.
+  const { ref: stageRef, inView: seen } = useInView<HTMLDivElement>({ threshold: 0.6 });
 
   return (
-    <div ref={stageRef} className={`stage ${seen ? "seen" : ""} ${className}`.trim()} data-stage>
+    <div ref={stageRef} className={`stage ${seen ? "seen" : ""} ${className}`.trim()}>
       <div className="stage-bar">
         <Hint>{hint}</Hint>
         {barContent}
@@ -134,7 +55,7 @@ interface SegmentedProps<T extends string> {
 export const Segmented = <T extends string>({ name, legend, value, options, onChange }: SegmentedProps<T>) => (
   <fieldset className="ctl">
     <legend>{legend}</legend>
-    <div className="seg" role="radiogroup" aria-label={legend}>
+    <div className="seg">
       {options.map((option) => (
         <label key={option.value}>
           <input
@@ -151,15 +72,10 @@ export const Segmented = <T extends string>({ name, legend, value, options, onCh
   </fieldset>
 );
 
-interface ChipOption<T extends string> {
-  value: T;
-  label: string;
-}
-
 interface ChipsProps<T extends string> {
   label: string;
   value: T;
-  options: ChipOption<T>[];
+  options: SegmentedOption<T>[];
   onChange: (value: T) => void;
 }
 
@@ -178,6 +94,14 @@ export const Chips = <T extends string>({ label, value, options, onChange }: Chi
     ))}
   </div>
 );
+
+export interface FlowStep {
+  index: number;
+  state: Exclude<FlowState, "idle">;
+  message: string;
+}
+
+export type FlowState = "idle" | "active" | "done" | "fail" | "queued" | "skipped";
 
 const flowLabels: Record<FlowState, string> = {
   idle: "Ready",
@@ -219,13 +143,3 @@ export const Receipts = ({ items }: { items: Array<{ value: string; explanation:
     ))}
   </div>
 );
-
-export const copyToClipboard = async (text: string): Promise<boolean> => {
-  if (!navigator.clipboard?.writeText) return false;
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
-};

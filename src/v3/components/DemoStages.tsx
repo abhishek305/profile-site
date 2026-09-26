@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { buildBacklog, generatePeople, planCall, segmentMatch, texRender } from "../logic";
-import { copyToClipboard, Chips, Flow, Segmented, Stage, useToast, type FlowStep } from "./Stage";
+import { copyToClipboard } from "../lib/clipboard";
+import { useToast } from "./ui/toast-context";
+import { Chips, Flow, Segmented, Stage, type FlowStep } from "./Stage";
 
 type McpProfile = "in" | "out";
 type McpScope = "write" | "read";

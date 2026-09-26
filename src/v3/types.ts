@@ -1,5 +1,7 @@
 export type DemoKind = "mcp" | "architect" | "crowdly" | "latex";
 
+export type ThemeName = "light" | "dark";
+
 export interface ProjectLink {
   label: string;
   href: string;
@@ -10,6 +12,8 @@ export interface Project {
   slug: string;
   title: string;
   navLabel: string;
+  /** Home-page section id, targeted by the section rail and `#hash` links. */
+  anchor: string;
   tagline: string;
   paragraphs: string[];
   demo: DemoKind;
@@ -38,12 +42,9 @@ export interface Repository {
   links: ProjectLink[];
 }
 
-export interface SkillGroup {
-  label: string;
-  value: string;
-}
-
 export interface DefinitionItem {
   label: string;
   value: string;
 }
+
+export type RouteKind = "home" | "work" | "project" | "experience" | "code" | "about" | "contact";
