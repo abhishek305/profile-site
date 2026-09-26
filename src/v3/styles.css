@@ -1127,24 +1127,21 @@ body[data-site="v3"] .repos .stack {
 }
 
 body[data-site="v3"] .repos .lk {
-  display: flex;
-  gap: 14px;
   font: 600 0.95rem var(--font-head);
 }
 
 /*
- * A row of outbound links. The middot between them is a generated `::before`
- * on every item but the first, so the separator is a visual detail and is not
- * announced between the link labels. The inline " · " text node this replaced
- * was read out as part of the surrounding sentence.
+ * A row of outbound links.
+ *
+ * The middot is a generated `::before` rather than a text node between the
+ * anchors. A real text node is part of the paragraph and gets read out as part
+ * of the surrounding sentence; generated content is not in the DOM, so most
+ * screen readers skip it.
+ *
+ * The container must stay inline. As a flex container, each child's `::before`
+ * becomes a flex item in its own right, which puts a gap on both sides of every
+ * separator and lets a wrap strand a separator at the end of a line.
  */
-body[data-site="v3"] .linklist {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0 0.5em;
-  align-items: baseline;
-}
-
 body[data-site="v3"] .linklist > * + *::before {
   content: " · ";
   color: var(--muted);
@@ -1416,12 +1413,6 @@ body[data-site="v3"] [hidden] {
   border-left: 3px solid #c3ccdd;
   color: #465272;
   font-size: 0.95rem;
-}
-
-.v3-static-shell .linklist {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0 0.5em;
 }
 
 .v3-static-shell .linklist > * + *::before {
