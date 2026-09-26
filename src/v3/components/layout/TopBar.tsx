@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: "/code", label: "Code" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/resume", label: "Résumé" },
 ] as const;
 
 /** Reading progress. Decorative: the scroll position itself conveys this. */

@@ -28,6 +28,11 @@ const {
   projects,
   repositories,
   resultClaims,
+  resumeContact,
+  resumeHighlights,
+  resumeName,
+  resumeSummary,
+  resumeTitle,
 } = await loadTypeScriptModules(["src/v3/content/index.ts"]);
 
 const routes = await readJson("src/v3/route-data.json");
@@ -111,21 +116,30 @@ const results = ({ standalone = false } = {}) =>
     "</div></section>",
   ].join("");
 
+const rolesList = () =>
+  '<ol class="roles">' +
+  experience
+    .map(
+      (role) =>
+        `<li><div class="role-h"><h3>${escapeHtml(role.title)}</h3><span>${escapeHtml(role.dates)}</span></div><ul>${role.bullets
+          .map((bullet) => `<li>${escapeHtml(bullet)}</li>`)
+          .join("")}</ul></li>`,
+    )
+    .join("") +
+  "</ol>";
+
+const definitionsList = () =>
+  '<dl class="defs">' +
+  aboutDefinitions.map((item) => `<dt>${escapeHtml(item.label)}</dt><dd>${escapeHtml(item.value)}</dd>`).join("") +
+  "</dl>";
+
 const experienceSection = ({ standalone = false } = {}) =>
   [
     `<section class="chapter" id="${standalone ? "experience-details" : "experience"}">`,
     sectionHeading("Experience", standalone),
     `<p>${escapeHtml(EMPLOYMENT.company)}, ${escapeHtml(EMPLOYMENT.from)} to ${escapeHtml(EMPLOYMENT.to)}. ${escapeHtml(experienceIntro)}</p>`,
-    '<ol class="roles">',
-    experience
-      .map(
-        (role) =>
-          `<li><div class="role-h"><h3>${escapeHtml(role.title)}</h3><span>${escapeHtml(
-            role.dates,
-          )}</span></div><ul>${role.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}</ul></li>`,
-      )
-      .join(""),
-    "</ol></section>",
+    rolesList(),
+    "</section>",
   ].join("");
 
 const codeSection = ({ standalone = false } = {}) =>
@@ -159,6 +173,44 @@ const aboutSection = ({ standalone = false } = {}) =>
       .map((item) => `<dt>${escapeHtml(item.label)}</dt><dd>${escapeHtml(item.value)}</dd>`)
       .join(""),
     "</dl></section>",
+  ].join("");
+
+/** The résumé document, as an article rather than a section. */
+const resumeArticle = () =>
+  [
+    '<article class="chapter resume">',
+    "<h2>Summary</h2>",
+    resumeSummary.map((text) => `<p>${escapeHtml(text)}</p>`).join(""),
+    '<ul class="resume-contact">',
+    resumeContact
+      .map(
+        (item) =>
+          `<li><b>${escapeHtml(item.label)}</b>${
+            item.href.startsWith("mailto:")
+              ? `<a href="${escapeHtml(item.href)}">${escapeHtml(item.value)}</a>`
+              : link(item.href, item.value)
+          }</li>`,
+      )
+      .join(""),
+    "</ul>",
+    '<div class="contact-links resume-actions">',
+    '<a class="btn primary" href="/resume.pdf" download="Abhishek-Ezhava-resume.pdf">Download PDF</a>',
+    link("/resume.pdf", "Open in a new tab"),
+    "</div>",
+    "<h2>Experience</h2>",
+    `<p class="resume-note">${escapeHtml(EMPLOYMENT.company)}, ${escapeHtml(EMPLOYMENT.from)} to ${escapeHtml(EMPLOYMENT.to)}. ${escapeHtml(experienceIntro)}</p>`,
+    rolesList(),
+    "<h2>Selected impact</h2>",
+    '<ul class="resume-highlights">',
+    resumeHighlights
+      .map(
+        (claim) => `<li><b>${escapeHtml(claim.value)}</b><span>${escapeHtml(claim.explanation)}</span></li>`,
+      )
+      .join(""),
+    "</ul>",
+    "<h2>Skills, education and recognition</h2>",
+    definitionsList(),
+    "</article>",
   ].join("");
 
 const contactSection = ({ standalone = false } = {}) =>
@@ -249,6 +301,10 @@ const bodyFor = (route) => {
       pageHead("About", "Frontend-heavy, full-stack, and focused on developer platforms.") +
       aboutSection({ standalone: true })
     );
+  }
+
+  if (route.kind === "resume") {
+    return pageHead(resumeName, resumeTitle) + resumeArticle();
   }
 
   return pageHead("Contact", "The quickest way to reach me is email.") + contactSection({ standalone: true });

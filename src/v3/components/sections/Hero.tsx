@@ -13,6 +13,9 @@ export const Hero = () => (
       <a className="btn primary" href="#mcp">
         Try the demos
       </a>
+      <a className="btn" href="/resume">
+        Read my résumé
+      </a>
       <a className="btn" href="#experience">
         See my experience
       </a>
