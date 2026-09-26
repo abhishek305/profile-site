@@ -24,6 +24,12 @@ export const ArchitectStage = ({
     setSpec(SAMPLE_SPECS[next]);
   };
 
+  /** Reset restores the preset text and returns to the backlog view. */
+  const reset = () => {
+    selectPreset(preset);
+    setView("backlog");
+  };
+
   return (
     <Stage
       hint="Try it: edit the spec"
@@ -40,7 +46,7 @@ export const ArchitectStage = ({
               { value: "checkout", label: "Checkout" },
             ]}
           />
-          <button className="btn small" type="button" onClick={() => selectPreset(preset)}>
+          <button className="btn small" type="button" onClick={reset}>
             Reset
           </button>
         </>

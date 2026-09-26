@@ -23,6 +23,7 @@ type Action =
   | { type: "config"; config: CallConfig }
   | { type: "start"; runId: number }
   | { type: "reveal"; runId: number; index: number; step: FlowStep }
+  | { type: "settle"; runId: number; index: number; step: FlowStep }
   | { type: "finish"; runId: number; plan: CallPlan }
   | { type: "reset" };
 
@@ -54,6 +55,14 @@ const reducer = (state: State, action: Action): State => {
         steps: [...state.steps.slice(0, index), { ...step, state: "active" }],
         log: [...state.log, logLine(step)],
       };
+    }
+
+    // A step that has been reached settles into its real state: Done, Stopped
+    // or Waiting. Without this the node sits on "Working" until the whole run
+    // finishes, and watching the flow progress is the point of the demo.
+    case "settle": {
+      if (state.runId !== action.runId) return state;
+      return { ...state, steps: [...state.steps.slice(0, action.index), action.step] };
     }
 
     case "finish": {
@@ -110,7 +119,9 @@ export const McpStage = ({
       dispatch({ type: "reveal", runId, index, step });
       timers.current.push(
         setTimeout(() => {
-          if (runIdRef.current === runId) advance(index + 1);
+          if (runIdRef.current !== runId) return;
+          dispatch({ type: "settle", runId, index, step });
+          advance(index + 1);
         }, STEP_MS),
       );
     };

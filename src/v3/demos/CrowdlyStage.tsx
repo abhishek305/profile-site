@@ -63,13 +63,19 @@ export const CrowdlyStage = ({
     setSaved((current) => current.filter((_, itemIndex) => itemIndex !== index));
   };
 
+  /** Reset clears the saved segments too, not just the rules. */
+  const reset = () => {
+    setRules(defaultRules());
+    setSaved([]);
+  };
+
   return (
     <Stage
       hint="Try it: change a rule"
       disclaimer={disclaimer}
       fallback={`This demo needs JavaScript. It filters ${people.length} fictional people by interest, city, recent activity and bookings.`}
       actions={
-        <button className="btn small" type="button" onClick={() => setRules(defaultRules())}>
+        <button className="btn small" type="button" onClick={reset}>
           Reset
         </button>
       }

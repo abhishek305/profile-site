@@ -31,7 +31,10 @@ export const Stage = ({
   className = "",
   fallback = DEFAULT_FALLBACK,
 }: StageProps) => {
-  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.6 });
+  // Watch the hint bar, not the stage. A stage is far taller than the viewport,
+  // so a 0.6 ratio on the stage itself is unreachable and the reveal would
+  // either never fire or fire on the bar arriving, which is not the effect.
+  const { ref, inView } = useInView<HTMLDivElement>({ target: ".stage-bar", threshold: 0.6 });
 
   return (
     <div ref={ref} className={`stage ${inView ? "seen" : ""} ${className}`.trim()}>

@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
 export interface InViewOptions {
+  /**
+   * Observe this descendant of the returned ref's element instead of the
+   * element itself, e.g. `".stage-bar"`. Useful when the container is much
+   * taller than the viewport, so a ratio threshold on the container could
+   * never be reached.
+   */
+  target?: string;
   /** Margin around the root, e.g. `"420px 0px"` to fire before the element is on screen. */
   rootMargin?: string;
   threshold?: number | number[];
@@ -13,23 +20,32 @@ export interface InViewOptions {
    * Defaults to true.
    */
   fallbackToScroll?: boolean;
+  /**
+   * Fraction of the viewport height the target must reach before it counts as
+   * visible. The scroll fallback uses this in place of a raw pixel comparison.
+   */
+  revealAt?: number;
 }
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const DEFAULT_REVEAL_AT = 0.92;
+
 /**
- * Reports whether the returned ref's element has entered the viewport.
+ * Reports whether a target has entered the viewport.
  *
  * This is the single implementation behind the section rail, the reading
  * progress line, the stage reveal animation and the lazy stage chunk loader,
  * all of which previously carried their own copy of the same observer.
  */
 export const useInView = <T extends HTMLElement>({
+  target,
   rootMargin,
   threshold = 0,
   once = true,
   fallbackToScroll = true,
+  revealAt = DEFAULT_REVEAL_AT,
 }: InViewOptions = {}) => {
   const ref = useRef<T>(null);
   const [inView, setInView] = useState(false);
@@ -37,6 +53,8 @@ export const useInView = <T extends HTMLElement>({
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
+
+    const observed = (target ? element.querySelector<HTMLElement>(target) : element) ?? element;
 
     // With reduced motion there is nothing to animate, so show the content at once.
     if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
@@ -55,20 +73,22 @@ export const useInView = <T extends HTMLElement>({
       },
       { rootMargin, threshold },
     );
-    observer.observe(element);
+    observer.observe(observed);
 
     return () => observer.disconnect();
-  }, [rootMargin, threshold, once]);
+  }, [target, rootMargin, threshold, once]);
 
   useEffect(() => {
     const element = ref.current;
     if (!element || !fallbackToScroll) return;
 
+    const observed = (target ? element.querySelector<HTMLElement>(target) : element) ?? element;
+
     let settled = inView;
     const update = () => {
       if (settled) return;
-      const rect = element.getBoundingClientRect();
-      const visible = rect.top < window.innerHeight && rect.bottom > 0;
+      const rect = observed.getBoundingClientRect();
+      const visible = rect.top < window.innerHeight * revealAt && rect.bottom > 0;
       if (visible) {
         setInView(true);
         if (once) settled = true;
@@ -84,7 +104,7 @@ export const useInView = <T extends HTMLElement>({
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
-  }, [fallbackToScroll, once, inView]);
+  }, [target, fallbackToScroll, once, inView, revealAt]);
 
   return { ref, inView };
 };
