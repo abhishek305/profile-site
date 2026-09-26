@@ -140,10 +140,3 @@ for (const route of routes) {
   }
 }
 
-const legacyRoute = { path: "/v1", label: "Legacy portfolio", title: "Abhishek Ezhava – Portfolio (legacy)", description: "Legacy IDE portfolio for Abhishek Ezhava." };
-const legacy = addMeta(template, legacyRoute);
-await mkdir(join(dist, "v1"), { recursive: true });
-await writeFile(join(dist, "v1", "index.html"), legacy);
-await writeFile(join(dist, "v1.html"), legacy);
-await writeFile(join(dist, "og", "legacy.svg"), ogSvg(legacyRoute));
-await writeFile(join(dist, "og", "v1.svg"), ogSvg(legacyRoute));

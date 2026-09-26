@@ -1,4 +1,4 @@
-import { links, profile } from "@/constants/profile";
+import { links, profile } from "./profile";
 import type { DefinitionItem, ExperienceRole, Project, Repository, ResultClaim, SkillGroup } from "./types";
 
 export const projects: Project[] = [
