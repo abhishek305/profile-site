@@ -7,69 +7,33 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'robots.txt', 'og.svg'],
       manifest: {
-        name: 'Abhishek Ezhava - Portfolio',
-        short_name: 'Portfolio IDE',
-        description: 'Senior Software Engineer Portfolio - IDE themed interactive resume',
-        theme_color: '#282c34',
-        background_color: '#282c34',
+        name: 'Abhishek Ezhava — Play the work',
+        short_name: 'Abhishek Ezhava',
+        description: 'A portfolio of playable work by Abhishek Ezhava.',
+        theme_color: '#F1F4F9',
+        background_color: '#F1F4F9',
         display: 'standalone',
         icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
+          { src: 'pwa-192x192.svg', sizes: '192x192', type: 'image/svg+xml' },
+          { src: 'pwa-512x512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' },
+        ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,ico,png,woff2}'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'google-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
           },
-          {
-            urlPattern: /^https:\/\/cdn\.tailwindcss\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'tailwind-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
-              }
-            }
-          }
-        ]
-      }
-    })
+        ],
+      },
+    }),
   ],
-  resolve: {
-    alias: {
-      '@': '/src'
-    }
-  }
 });
-
