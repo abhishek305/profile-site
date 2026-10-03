@@ -335,10 +335,31 @@ const person = {
   sameAs: [links.github, links.linkedin],
 };
 
+const FOOTER_NAV = [
+  { href: "/#mcp", label: "Demos" },
+  { href: "/work", label: "Work" },
+  { href: "/experience", label: "Experience" },
+  { href: "/code", label: "Code" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/resume", label: "Résumé" },
+];
+
+const footerNav = FOOTER_NAV.map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`).join("");
+
+const footer = `<footer class="v3-footer"><div class="foot-in"><div class="foot-top"><a class="foot-brand" href="/">${escapeHtml(
+  identity.name,
+)}</a><nav class="foot-nav" aria-label="Footer">${footerNav}</nav><p class="foot-links">${link(
+  links.github,
+  "GitHub",
+)}${link(links.linkedin, "LinkedIn")}<a href="mailto:${escapeHtml(identity.email)}">Email</a><a href="#main">Back to top</a></p></div><p class="foot-base"><span>© ${new Date().getFullYear()} ${escapeHtml(
+  identity.name,
+)}. All rights reserved.</span><span>Last updated September 21, 2026.</span><span>Design prototype: demos use stand-in logic and fictional data.</span></p></div></footer>`;
+
 const shell = (route) =>
   `<div class="v3-static-shell"><header><a href="/">${escapeHtml(identity.name)}</a><nav aria-label="Primary">${nav}</nav></header><main id="main">${bodyFor(
     route,
-  )}</main><footer>Last updated September 21, 2026. Design prototype: demos use stand-in logic and fictional data.</footer></div>`;
+  )}</main>${footer}</div>`;
 
 const addMeta = (html, route) => {
   const canonical = `${SITE_URL}${route.path}`;

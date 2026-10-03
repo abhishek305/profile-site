@@ -1164,6 +1164,73 @@ body .foot-in {
   padding: 0 24px;
 }
 
+body .foot-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 24px;
+  padding-bottom: 12px;
+}
+
+body .foot-brand {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+body .foot-brand:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+body .foot-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+}
+
+body .foot-nav a {
+  text-decoration: none;
+}
+
+body .foot-nav a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+body .foot-links {
+  margin: 0 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+}
+
+body .foot-links a {
+  text-decoration: none;
+}
+
+body .foot-links a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+body .foot-base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.88rem;
+}
+
+body .foot-base > * + *::before {
+  content: "·";
+  margin-right: 8px;
+}
+
 body #toast {
   position: fixed;
   bottom: calc(24px + env(safe-area-inset-bottom, 0px));
