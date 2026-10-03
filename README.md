@@ -33,6 +33,7 @@ npm run dev
 | `/work` | Project index |
 | `/work/:slug` | A project chapter and its stage |
 | `/experience` `/code` `/about` `/contact` | Standing pages |
+| `/resume` | Résumé, readable on the page, with the PDF to view or download |
 
 Unknown paths render an explicit not-found page. Every route is prerendered to
 static HTML at build time, and the chapter copy is readable without JavaScript.
@@ -49,6 +50,18 @@ static HTML at build time, and the chapter copy is readable without JavaScript.
 `scripts/prerender.mjs` reads the same content and site modules, so the static
 HTML and the React bundle cannot drift apart. Adding a route is one row in
 `route-data.json` plus one entry in `src/v3/routes/pages.tsx`.
+
+### Résumé
+
+`/resume` is the résumé, as a page rather than a PDF: it reflows for a phone,
+follows the theme, and its text is selectable and indexable. The PDF is offered
+three ways from the same page — view it inline, open it in a tab, or download it
+— and a print stylesheet turns the page itself into a clean document.
+
+To change the PDF, replace `public/resume.pdf`. It is served as a static asset
+and deliberately left out of the service worker precache, so it is not
+downloaded on every visit. Keep it free of a phone number: a public page is a
+scraping target.
 
 ### The demos
 

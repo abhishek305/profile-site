@@ -15,3 +15,10 @@ export {
   linkedinProfile,
   repositories,
 } from "./profile-text";
+export {
+  resumeContact,
+  resumeHighlights,
+  resumeName,
+  resumeSummary,
+  resumeTitle,
+} from "./resume";

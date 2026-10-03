@@ -8,5 +8,6 @@
   { "path": "/experience", "label": "Experience", "title": "Experience – Abhishek Ezhava", "description": "Experience building developer platforms at Contentstack from January 2020 to August 2026.", "kind": "experience" },
   { "path": "/code", "label": "Code", "title": "Code on GitHub – Abhishek Ezhava", "description": "Selected open-source projects by Abhishek Ezhava.", "kind": "code" },
   { "path": "/about", "label": "About", "title": "About – Abhishek Ezhava", "description": "About Abhishek Ezhava's frontend, backend and AI platform work.", "kind": "about" },
-  { "path": "/contact", "label": "Contact", "title": "Contact – Abhishek Ezhava", "description": "Get in touch about MCP, agent tooling and developer platforms.", "kind": "contact" }
+  { "path": "/contact", "label": "Contact", "title": "Contact – Abhishek Ezhava", "description": "Get in touch about MCP, agent tooling and developer platforms.", "kind": "contact" },
+  { "path": "/resume", "label": "Résumé", "title": "Résumé – Abhishek Ezhava", "description": "Résumé of Abhishek Ezhava, senior software engineer working on MCP and developer platforms at Contentstack.", "kind": "resume" }
 ]

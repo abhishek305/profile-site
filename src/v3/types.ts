@@ -49,4 +49,12 @@ export interface DefinitionItem {
   value: string;
 }
 
-export type RouteKind = "home" | "work" | "project" | "experience" | "code" | "about" | "contact";
+export type RouteKind =
+  | "home"
+  | "work"
+  | "project"
+  | "experience"
+  | "code"
+  | "about"
+  | "contact"
+  | "resume";

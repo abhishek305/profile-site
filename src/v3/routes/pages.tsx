@@ -7,6 +7,7 @@ import { Experience } from "../components/sections/Experience";
 import { Home } from "../components/sections/Home";
 import { ProjectChapter } from "../components/sections/ProjectChapter";
 import { NotFound } from "../components/sections/NotFound";
+import { Resume } from "../components/sections/Resume";
 import { projectBySlug, projects } from "../content";
 import type { V3Route } from "../routes";
 
@@ -89,6 +90,8 @@ const pages: Record<V3Route["kind"], (props: PageProps) => ReactNode> = {
       <Contact standalone />
     </>
   ),
+
+  resume: () => <Resume />,
 };
 
 /** Renders the active route, or the not-found page for an unknown path. */
